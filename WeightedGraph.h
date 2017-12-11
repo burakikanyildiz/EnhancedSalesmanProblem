@@ -17,7 +17,7 @@ public:
     list<int> *coins;
     WeightedGraph(int V);
     void addUndirectedEdge(int u, int v,Road r);
-    void shortestPath(int startNode);
+    void shortestPath(int startNode,char* k);
 };
 
 

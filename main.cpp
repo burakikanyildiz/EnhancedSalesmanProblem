@@ -14,8 +14,12 @@ void split1(const string& str, Container& cont){
     copy(istream_iterator<string>(iss),
          istream_iterator<string>(),back_inserter(cont));
 }
-int main() {
-    ifstream infile("C:\\Users\\abc\\Desktop\\fuz\\in_fuz_3_new");
+int main(int argc, char* argv[]) {
+    if(argc!=3){
+        cout<<"Run the code with following command: ./projext1 [input_file] [output_file]"<<endl;
+        return 1;
+    }
+    ifstream infile(argv[1]);
     string line;
     getline(infile, line);
    // cout<<"line is:"<<line<<endl;
@@ -59,7 +63,7 @@ int main() {
         }
     }*/
     cout<<"myGraph2: "<<endl;
-    myGraph.shortestPath(1);
+    myGraph.shortestPath(1,argv[2]);
 
 
     return 0;

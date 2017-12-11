@@ -64,7 +64,7 @@ void WeightedGraph::addUndirectedEdge(int u, int v, Road r) {
     adj[v].push_back(make_pair(u,r));
 }
 
-void WeightedGraph::shortestPath(int startNode) {
+void WeightedGraph::shortestPath(int startNode,char* k) {
     string sArr[V+1];
     bool isOk[V+1];
     priority_queue<pair2,vector<pair2>,myCompDistance<pair2>> pq;
@@ -130,8 +130,9 @@ void WeightedGraph::shortestPath(int startNode) {
         }
     }
     ofstream myfile;
-    myfile.open("C:\\Users\\abc\\Desktop\\outputs\\Fuzoutput3.txt", ios::trunc);
+    myfile.open(k, ios::trunc);
     myfile<<sArr[V];
+    myfile.close();
    // cout<<sArr[V]<<endl;
     cout<<"distance["<<V<<"] is: "<<distance[V]<<endl;
 
