@@ -12,13 +12,7 @@
 
 # define INF 0x3f3f3f3f
 typedef pair<int, int> pair2;
-struct distnCoin{
-    int distance;
-    unordered_set<int> coinsHave;
-    distnCoin(){
-        distance=INF;
-    }
-};
+//distance based comparision for priority queue
 template<typename type>
 struct myCompDistance {
     bool operator()(const type & first, const type & second) const  {
@@ -26,28 +20,21 @@ struct myCompDistance {
     }
 };
 
-//yolun üstünden giderken gereken coin bizde var mı?
+//return whether we have the required coin as walking on the road
 bool canGo(unordered_set<int> setx , Road r){
     for(int i=0;i<r.numOfThieves;i++){
         if(setx.find(r.thieves[i])!=setx.end()) {
-
         }else{
-    //        cout<<"distancesi "<<r.weight<<" olan yoldan gidemem "<<r.thieves[i]<<" no'lu hirsiz var"<<endl;
             return false;
         }
     }
-  // cout<<"distancesi "<<r.weight<<" olan yoldan gidiyorum"<<endl;
     return true;
 }
-//gidince yeni coin gelecek mi?
+//return whether we will have new coin(s) if we go through the road
 bool newCoin(unordered_set<int> &coinH1 ,unordered_set<int> &coinH2){
-    //cout<<"girdik1"<<endl;
     unordered_set<int>::iterator itrC;
-    //cout<<coinH1.size()<<endl;
     for(itrC=coinH1.begin(); itrC!=coinH1.end() ; ++itrC) {
-        //cout<<"girdik2"<<endl;
         if (coinH2.find(*itrC)==coinH2.end()) {
-           // cout << "yeni coin gelecek BABAĞ" << endl;
             return true;
         }
     }
@@ -65,6 +52,8 @@ void WeightedGraph::addUndirectedEdge(int u, int v, Road r) {
 }
 
 void WeightedGraph::shortestPath(int startNode,char* k) {
+    //initializations
+
     string sArr[V+1];
     bool isOk[V+1];
     priority_queue<pair2,vector<pair2>,myCompDistance<pair2>> pq;
@@ -75,8 +64,6 @@ void WeightedGraph::shortestPath(int startNode,char* k) {
         sArr[i]=to_string(-1);
     }
     unordered_set<int> coinsHave[V+1];
-
-    //initialize
     sArr[startNode]=to_string(startNode)+" ";
     cout<<sArr[startNode]<<endl;
     distance[startNode]=0;
@@ -84,18 +71,20 @@ void WeightedGraph::shortestPath(int startNode,char* k) {
         coinsHave[startNode].insert(*ikra);
     }
     pq.push(make_pair(distance[startNode],startNode));
+
+    //main loop process until find the path to the destination or there is no new possible iteration
     while(!isOk[V] && !pq.empty()){
         int currNode=pq.top().second;
         pq.pop();
         isOk[currNode]=true;
         list<iPair>::iterator itr2;
-       // int a=0;
+        //iterate through the adjancies of the Current Node
         for(itr2=adj[currNode].begin();itr2!=adj[currNode].end();++itr2) {
-        //    cout<<++a<<endl;
             int currNeighbor = (*itr2).first;
             Road currRoad = (*itr2).second;
             if (canGo(coinsHave[currNode], currRoad)) {
                 if (isOk[currNeighbor]) {
+                    //will we get new coin by going this path or can we decrease the distance
                     if ( newCoin(coinsHave[currNode],coinsHave[currNeighbor]) || distance[currNeighbor] > distance[currNode] + currRoad.weight) {
                         distance[currNeighbor] = distance[currNode] + currRoad.weight;
                         unordered_set<int>::iterator it;
@@ -111,6 +100,7 @@ void WeightedGraph::shortestPath(int startNode,char* k) {
                         pq.push(make_pair(distance[currNeighbor],currNeighbor));
                     }
                 }else{
+                    //can we decrease the distance between the nodes
                     if (distance[currNeighbor] > distance[currNode] + currRoad.weight ) {
                         distance[currNeighbor] = distance[currNode] + currRoad.weight;
                         unordered_set<int>::iterator it;
@@ -133,47 +123,6 @@ void WeightedGraph::shortestPath(int startNode,char* k) {
     myfile.open(k, ios::trunc);
     myfile<<sArr[V];
     myfile.close();
-   // cout<<sArr[V]<<endl;
     cout<<"distance["<<V<<"] is: "<<distance[V]<<endl;
 
-
-
-
-
-
-
-
-
-    /*
-    vector<vector<distnCoin>> dis;
-    priority_queue<pair2> pq;
-
-    pq.push(make_pair(0,startNode));
-    cout<<dis[startNode].data()->distance<<endl;
-    dis[startNode].data()->distance=0;
-    cout<<"SA"<<endl;
-
-    while(!pq.empty()){
-        int currNode=pq.top().second;
-        pq.pop();
-
-        list<iPair>::iterator itr;
-        for(itr=adj[currNode].begin();itr!=adj[currNode].end();itr++){
-            int currNeighbor = (*itr).first;
-            Road currRoad = (*itr).second;
-            if(dis[currNeighbor].data()->distance > dis[currNode].data()->distance+currRoad.weight){
-                if(helperFunc1(currNode,dis,currRoad)) {
-                    dis[currNeighbor].data()->distance = dis[currNode].data()->distance + currRoad.weight;
-                    list<int>::iterator itr2;
-                    for(itr2=coins[currNeighbor].begin();itr2!=coins[currNeighbor].end();itr2++){
-                        dis[currNode].data()->coinsHave.insert(*itr2);
-                    }
-                    pq.push(make_pair(dis[currNeighbor].data()->distance,currNeighbor));
-                }
-            }
-        }
-    }*/
-   // printf("Vertex   Distance from Source %d \n",startNode);
-   // for (int i = 0; i < V; ++i)
-   //     printf("%d \t\t %d\n", i, dis[i].data()->distance);
 }

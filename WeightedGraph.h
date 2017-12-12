@@ -12,12 +12,12 @@ typedef pair<int, Road> iPair;
 using namespace std;
 class WeightedGraph {
 public:
-    int V;
-    list<iPair> *adj;
-    list<int> *coins;
-    WeightedGraph(int V);
+    int V;  //number of vertices
+    list<iPair> *adj;   //list array to hold adjacencies of each vertex
+    list<int> *coins;   //list array to hold coins in each vertex
+    WeightedGraph(int V);//constructor
     void addUndirectedEdge(int u, int v,Road r);
-    void shortestPath(int startNode,char* k);
+    void shortestPath(int startNode,char* k);// performs the full process of finding shortest path
 };
 
 
